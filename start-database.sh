@@ -9,7 +9,7 @@
 
 # On Linux and macOS you can run this script directly - `./start-database.sh`
 
-DB_CONTAINER_NAME="t3-clerk-extension-issue-mysql"
+DB_CONTAINER_NAME="t3-plasmo-clerk-auth-issue-mysql"
 
 if ! [ -x "$(command -v docker)" ]; then
   echo "Docker is not installed. Please install docker and try again.\nDocker install guide: https://docs.docker.com/engine/install/"
@@ -40,6 +40,6 @@ if [ "$DB_PASSWORD" == "password" ]; then
   sed -i -e "s#:password@#:$DB_PASSWORD@#" .env
 fi
 
-docker run --name $DB_CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD -e MYSQL_DATABASE=t3-clerk-extension-issue -d -p 3306:3306 docker.io/mysql
+docker run --name $DB_CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD -e MYSQL_DATABASE=t3-plasmo-clerk-auth-issue -d -p 3306:3306 docker.io/mysql
 
 echo "Database container was successfully created"

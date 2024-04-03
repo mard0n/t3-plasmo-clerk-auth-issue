@@ -3,52 +3,32 @@ import {
   SignedIn,
   SignedOut,
   SignIn,
-  SignUp,
-  UserButton
+  SignUp
 } from "@clerk/chrome-extension"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { MemoryRouter, Route, Routes, useNavigate } from "react-router-dom"
 
-import { createPost } from "../background/messages/createPost"
-import type { Post } from "../server/db/schema"
+import { fetchPosts } from "./background/messages/fetchPosts"
+import type { Post } from "./server/db/schema"
 
-function Welcome() {
-  const [data, setData] = useState("")
+const PopupIndex = () => {
   const [posts, setPosts] = useState<Post[]>([])
-
-  const handleClick = () => {
-    void (async () => {
-      await createPost(data)
-      setData("")
-    })()
-  }
-
+  useEffect(() => {
+    fetchPosts()
+      .then((posts) => {
+        setPosts(posts)
+      })
+      .catch(console.error)
+  }, [])
   return (
-    <div
-      style={{
-        padding: 16,
-        minWidth: 300
-      }}>
-      <UserButton />
-      <h2>
-        Welcome to your{" "}
-        <a href="https://www.plasmo.com" target="_blank">
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
+    <>
+      <h1>Hello from Popup</h1>
       <ul>
-        {posts.map((post) => (
-          <li key={post.name}>{post.name}</li>
-        ))}
+        {posts.map((post) => {
+          return <li key={post.name}>{post.name}</li>
+        })}
       </ul>
-      <input
-        onChange={(e) => setData(e.target.value)}
-        value={data}
-        placeholder="Add your name"
-      />
-      <button onClick={handleClick}>Submit</button>
-    </div>
+    </>
   )
 }
 
@@ -69,7 +49,7 @@ function ClerkProviderWithRoutes() {
               element={
                 <>
                   <SignedIn>
-                    <Welcome />
+                    <PopupIndex />
                   </SignedIn>
                   <SignedOut>
                     <SignIn

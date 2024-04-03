@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc"
@@ -13,14 +14,18 @@ export const postRouter = createTRPCRouter({
       // await new Promise((resolve) => setTimeout(resolve, 1000))
 
       await ctx.db.insert(posts).values({
-        name: input.name
+        name: input.name,
+        userId: ctx.auth.userId
       })
 
       return "success"
     }),
 
   getAll: protectedProcedure.query(({ ctx }) => {
+    const userId = ctx.auth.userId
+    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" })
     return ctx.db.query.posts.findMany({
+      where: (posts, { eq }) => eq(posts.userId, userId),
       orderBy: (posts, { desc }) => [desc(posts.createdAt)]
     })
   })

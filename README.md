@@ -1,29 +1,27 @@
-# Create T3 App
+# t3-plasmo-clerk integration
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Figuring out how to integrate clerk with chrome extension building framework (plasmo)
 
-## What's next? How do I make an app with this?
+## Getting started
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+You'll need a Clerk account and local MySQL database (which will be instantiated automatically)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- Clone this project `git clone git@github.com:mard0n/t3-plasmo-clerk-auth-issue.git`
+- `cd t3-plasmo-clerk-auth-issue`
+- `pnpm install` or `yarn install` or `npm install`
+- Run `./start-database.sh` - it will create local MySQL docker instance. `DATABASE_URL` is automatically configured if the script runs successfully
+- Add your Clerk account env variables `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` (same as `PLASMO_PUBLIC_CLERK_PUBLISHABLE_KEY`) and `CLERK_SECRET_KEY`
+- Run `pnpm dev` it will run Next and Plasmo servers
+- Load the built extension in your chrome browser. [Here is the link to help you out with that](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked)
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Goal
+
+The main goal is to authenticate the user inside the tab pages `./tabs` [Tab Pages - Plasmo](https://docs.plasmo.com/framework/tab-pages) or inside the popup `./popup.tsx` [Popup - Plasmo](https://docs.plasmo.com/framework/ext-pages#adding-a-popup-page) and the requests made inside the content scripts/background workers need to send reflect that user is authenticated (send the token or whatever necessary for trpc clerk wrapper to identify the user)
+
+This is how you open the tab pages `chrome-extension://[---chrome extension id---]/tabs/welcome.html`
 
 ## Learn More
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [T3 Stack Documentation](https://create.t3.gg/)
+- [Plasmo](https://docs.plasmo.com/)
+- [Clerk](https://clerk.com/docs)
